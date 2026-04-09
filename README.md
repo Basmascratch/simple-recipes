@@ -1,5 +1,7 @@
 # 🍰 My Cooking Page
 
+My website is live at: https://your-username.github.io/cooking-page/
+
 A cute recipe website I made with HTML and CSS. It shows three recipes:
 - Fluffy Pancakes
 - Chocolate Mug Cake  
@@ -20,4 +22,4 @@ BeniCheeseBun - 17 years old, learning to code!
 
 ## Email me
 benicheesebun@gmail.com
-My website is live at: https://your-username.github.io/cooking-page/
+
