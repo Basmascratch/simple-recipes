@@ -2,102 +2,9 @@
 <html>
 <head>
     <title>My Cooking Page 🍰</title>
-    <style>
-        body {
-            background-color: #fff4e6;
-            font-family: Arial, sans-serif;
-            color: #6b4f4f;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #ff8fa3;
-            text-align: center;
-            margin-top: 20px;
-        }
-        h2 {
-            color: #ff8fa3;
-        }
-        p {
-            text-align: center;
-            font-size: 18px;
-        }
-        .recipe {
-            background-color: #ffd6e0;
-            width: 280px;
-            margin: 10px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .recipes-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        ul, ol {
-            text-align: left;
-            padding-left: 20px;
-        }
-        .recipe:hover {
-            transform: scale(1.03);
-            transition: 0.3s;
-        }
-        hr {
-            border: none;
-            height: 2px;
-            background-color: #ff8fa3;
-            width: 50%;
-            margin: 20px auto;
-        }
-        button {
-            background-color: #ff8fa3;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #e76f85;
-        }
-        .navbar {
-            background-color: #ffd6e0;
-            padding: 10px 0;
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .navbar a {
-            color: #6b4f4f;
-            text-decoration: none;
-            margin: 0 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            color: #ff8fa3;
-        }
-        .review-box {
-            text-align: center;
-            background-color: #ffd6e0;
-            padding: 20px;
-            border-radius: 20px;
-            width: 80%;
-            margin: 20px auto;
-        }
-        input, textarea {
-            border-radius: 8px;
-            border: 1px solid #ff8fa3;
-            font-family: Arial, sans-serif;
-        }
-    </style>
+    <!-- Same folder -->
+<link rel="stylesheet" href="cute.css">
+
 </head>
 <body>
 
@@ -182,5 +89,235 @@
     <p>📧 Or email me directly: <a href="mailto:benicheesebun@gmail.com">benicheesebun@gmail.com</a></p>
 </div>
 
+
+<script>// ============================================
+// 1. FORM SUBMISSION WITH VALIDATION
+// ============================================
+
+// Get the form and add a submit event listener
+const form = document.querySelector('form');
+if (form) {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Stop page from refreshing
+        
+        // Get the values from the form
+        const name = document.getElementById('name').value;
+        const review = document.getElementById('review').value;
+        
+        // Check if both fields are filled
+        if (name === '' || review === '') {
+            showMessage('💖 Please fill out both your name and review! 💖', 'warning');
+        } else {
+            showMessage(`🎉 Thank you ${name}! Your review has been sent! 🎉`, 'success');
+            form.reset(); // Clear the form
+        }
+    });
+}
+
+// Function to show floating messages
+function showMessage(text, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = text;
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'success' ? '#4CAF50' : '#ff8fa3'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        font-weight: bold;
+        z-index: 1000;
+        animation: slideDown 0.5s ease;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(messageDiv);
+    
+    // Remove message after 3 seconds
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+
+// ============================================
+// 2. RECIPE CLICK INTERACTIONS
+// ============================================
+
+// Add click effect to recipe cards
+const recipes = document.querySelectorAll('.recipe');
+recipes.forEach(recipe => {
+    recipe.addEventListener('click', function() {
+        const recipeTitle = this.querySelector('h2').textContent;
+        showMessage(`✨ You clicked on ${recipeTitle}! ✨`, 'info');
+        
+        // Add a little pop animation
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 200);
+    });
+});
+
+// ============================================
+// 3. LIKE BUTTON (Add to each recipe)
+// ============================================
+
+// Add a like button to each recipe
+recipes.forEach((recipe, index) => {
+    const likeButton = document.createElement('button');
+    likeButton.innerHTML = '❤️ Like';
+    likeButton.style.marginTop = '15px';
+    likeButton.style.width = '100%';
+    
+    let liked = false;
+    likeButton.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent triggering the recipe click
+        if (!liked) {
+            this.innerHTML = '❤️ Liked!';
+            this.style.background = '#e76f85';
+            showMessage('💕 Thanks for liking this recipe! 💕', 'success');
+            liked = true;
+        } else {
+            this.innerHTML = '❤️ Like';
+            this.style.background = '#ff8fa3';
+            liked = false;
+        }
+    });
+    
+    recipe.appendChild(likeButton);
+});
+
+// ============================================
+// 4. SEARCH/FILTER RECIPES (Add a search bar)
+// ============================================
+
+// Create search bar
+const searchContainer = document.createElement('div');
+searchContainer.style.textAlign = 'center';
+searchContainer.style.margin = '20px';
+searchContainer.style.width = '100%';
+
+const searchInput = document.createElement('input');
+searchInput.type = 'text';
+searchInput.placeholder = '🔍 Search recipes...';
+searchInput.style.padding = '12px';
+searchInput.style.width = '80%';
+searchInput.style.maxWidth = '400px';
+searchInput.style.borderRadius = '50px';
+searchInput.style.border = '2px solid #ff8fa3';
+searchInput.style.fontSize = '16px';
+
+searchContainer.appendChild(searchInput);
+document.querySelector('.recipes-container').before(searchContainer);
+
+// Filter recipes as you type
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    recipes.forEach(recipe => {
+        const title = recipe.querySelector('h2').textContent.toLowerCase();
+        const text = recipe.textContent.toLowerCase();
+        if (title.includes(searchTerm) || text.includes(searchTerm)) {
+            recipe.style.display = 'block';
+            recipe.style.animation = 'fadeIn 0.5s ease';
+        } else {
+            recipe.style.display = 'none';
+        }
+    });
+});
+
+// ============================================
+// 5. SMOOTH SCROLLING FOR NAVBAR
+// ============================================
+
+const navLinks = document.querySelectorAll('.navbar a');
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const text = this.textContent;
+        
+        if (text === 'Home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showMessage('🏠 Welcome home! 🏠', 'info');
+        } else if (text === 'Recipes') {
+            document.querySelector('.recipes-container').scrollIntoView({ behavior: 'smooth' });
+            showMessage('📖 Check out our delicious recipes! 📖', 'info');
+        } else if (text === 'Reviews') {
+            document.querySelector('.review-box').scrollIntoView({ behavior: 'smooth' });
+            showMessage('💬 We love hearing from you! 💬', 'info');
+        } else if (text === 'Contact') {
+            showMessage('📧 Email us at: benicheesebun@gmail.com 📧', 'info');
+        }
+    });
+});
+
+// ============================================
+// 6. DARK MODE TOGGLE (Bonus feature!)
+// ============================================
+
+// Create dark mode button
+const darkModeButton = document.createElement('button');
+darkModeButton.innerHTML = '🌙 Dark Mode';
+darkModeButton.style.position = 'fixed';
+darkModeButton.style.bottom = '20px';
+darkModeButton.style.right = '20px';
+darkModeButton.style.zIndex = '999';
+darkModeButton.style.borderRadius = '50px';
+darkModeButton.style.padding = '12px 20px';
+darkModeButton.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+document.body.appendChild(darkModeButton);
+
+let darkMode = false;
+darkModeButton.addEventListener('click', () => {
+    if (!darkMode) {
+        document.body.style.background = '#2d1f2d';
+        document.body.style.color = '#ffd6e0';
+        document.querySelectorAll('.recipe, .review-box, .navbar').forEach(el => {
+            el.style.background = '#3d2a3d';
+            el.style.color = '#ffd6e0';
+        });
+        darkModeButton.innerHTML = '☀️ Light Mode';
+        darkMode = true;
+        showMessage('🌙 Dark mode activated! 🌙', 'success');
+    } else {
+        document.body.style.background = '';
+        document.body.style.color = '';
+        document.querySelectorAll('.recipe, .review-box, .navbar').forEach(el => {
+            el.style.background = '';
+            el.style.color = '';
+        });
+        darkModeButton.innerHTML = '🌙 Dark Mode';
+        darkMode = false;
+        showMessage('☀️ Light mode activated! ☀️', 'success');
+    }
+});
+
+// ============================================
+// 7. PAGE LOAD WELCOME MESSAGE
+// ============================================
+
+// Show welcome message when page loads
+window.addEventListener('load', () => {
+    console.log('%c🍰 Welcome to Cute Cooking Page! 🍓', 'color: #ff8fa3; font-size: 20px; font-weight: bold;');
+    
+    // Show welcome message after 1 second
+    setTimeout(() => {
+        showMessage('🍰 Welcome to my kitchen! Ready to cook something yummy? 🍓', 'success');
+    }, 500);
+});
+
+// ============================================
+// 8. RECIPE COUNTER
+// ============================================
+
+const recipeCount = recipes.length;
+const counterDiv = document.createElement('div');
+counterDiv.style.textAlign = 'center';
+counterDiv.style.margin = '10px';
+counterDiv.style.fontSize = '14px';
+counterDiv.style.color = '#ff8fa3';
+counterDiv.innerHTML = `📚 ${recipeCount} delicious recipes waiting for you!`;
+document.querySelector('.recipes-container').before(counterDiv);
+</script>
 </body>
 </html>
