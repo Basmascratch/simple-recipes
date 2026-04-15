@@ -18,7 +18,7 @@ A cute recipe website I made with HTML and CSS. It shows three recipes:
 - Navigation menu
 
 ## Made by
-BeniCheeseBun - 17 years old, learning to code!
+BeniCheeseBun - Basma, learning to code!
 
 ## Email me
 benicheesebun@gmail.com
